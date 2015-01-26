@@ -3,6 +3,7 @@
 #define GLEW_STATIC
 
 #include "Shader.hpp"
+#include "ModelLoader.hpp"
 
 #include <GL/glew.h>
 #include <GL/gl.h>
@@ -27,6 +28,8 @@ class Sphere {
 			   shaderProgram;
 
 		Shader *shader;
+
+		ModelLoader *modelloader;
 
 	public:
 		Sphere();

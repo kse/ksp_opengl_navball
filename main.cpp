@@ -1,12 +1,5 @@
 #define GLEW_STATIC
 
-/* TODO:
- * - Make the single box 3D, so it looks nice.
- * - Maybe color shade the box depending on acceleration/tension of spring?
- * - Add several boxes with different spring parameters.
- * - Quarternions!
- */
-
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -106,7 +99,7 @@ GLFWwindow *initializeOpenGL() {
 		return NULL;
 	}
 
-	// Warning: Sleep value was found by trial and error, and if missing 
+	// Warning: Sleep value was found by trial and error, and if missing
 	// returned window positions will be 0.
 	usleep(1e5);
 	int windowx, windowy;
@@ -127,14 +120,6 @@ GLFWwindow *initializeOpenGL() {
 		glfwTerminate();
 		return NULL;
 	}
-
-	//std::cout << "Using monitor '"
-	//	<< "'with characteristics\n\tWidth: " << monitorMode->width
-	//	<< "\n\tHeight: " << monitorMode->height << "\n";
-
-	// Center the window.
-	//glfwSetWindowPos(window, monXOffset + monMode->width,
-	//		monYOffset + monMode->height);
 
 	glfwMakeContextCurrent(window);
 

@@ -1,9 +1,5 @@
 #include "Sphere.hpp"
 
-#include <assimp/cimport.h>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
-
 #include <iostream>
 #include <stdio.h>
 
@@ -50,8 +46,6 @@ GLuint indices[] = {
 };
 
 void Sphere::Draw(glm::mat4 view, float deltas) {
-	//printf("Velocity: %f\n", this->v);
-
 	glm::mat4 model;
 
 	glUseProgram(shaderProgram);
@@ -66,23 +60,80 @@ void Sphere::Draw(glm::mat4 view, float deltas) {
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
-	glDrawElements(GL_LINE_STRIP, 60, GL_UNSIGNED_INT, 0);
+	glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+	//glDrawElements(GL_TRIANGLES, modelloader->indices.size(), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, 17480, GL_UNSIGNED_INT, 0);
+	//glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+	
+
+	GLenum e = glGetError();
+	switch (e) {
+		case GL_INVALID_ENUM:
+			fprintf(stderr, "Invalid enum\n");
+			break;
+		case GL_INVALID_VALUE:
+			fprintf(stderr, "Invalid value\n");
+			break;
+		case GL_INVALID_OPERATION:
+			fprintf(stderr, "Invalid operation\n");
+			break;
+		default:
+			break;
+	}
+
+
 	glBindVertexArray(0);
 }
 
 Sphere::Sphere() {
+	modelloader = new ModelLoader("sphere.dae");
+
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
+
+	printf("Vertices: %lu, Indices: %lu\n", modelloader->vertices.size(), modelloader->indices.size());
 
 	// Create vertex buffer object (VBO) //
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, modelloader->vertices.size(), modelloader->vertices.data(), GL_STATIC_DRAW);
+
+	GLenum e = glGetError();
+	switch (e) {
+		case GL_INVALID_ENUM:
+			fprintf(stderr, "Invalid enum\n");
+			break;
+		case GL_INVALID_VALUE:
+			fprintf(stderr, "Invalid value\n");
+			break;
+		case GL_INVALID_OPERATION:
+			fprintf(stderr, "Invalid operation\n");
+			break;
+		default:
+			break;
+	}
 
 	// Create EBO (element buffer object) //
 	glGenBuffers(1, &EBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, modelloader->indices.size(), modelloader->indices.data(), GL_STATIC_DRAW);
+
+	e = glGetError();
+	switch (e) {
+		case GL_INVALID_ENUM:
+			fprintf(stderr, "Invalid enum\n");
+			break;
+		case GL_INVALID_VALUE:
+			fprintf(stderr, "Invalid value\n");
+			break;
+		case GL_INVALID_OPERATION:
+			fprintf(stderr, "Invalid operation\n");
+			break;
+		default:
+			break;
+	}
 
 	shader = new Shader();
 

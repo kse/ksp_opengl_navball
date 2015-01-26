@@ -1,4 +1,4 @@
-OBJS = main.cpp Camera.cpp Shader.cpp Telemachus.cpp Sphere.cpp
+OBJS = main.cpp Camera.cpp Shader.cpp Telemachus.cpp Sphere.cpp ModelLoader.cpp
 OBJ_NAME = navball
 CC = clang++
 
@@ -10,7 +10,7 @@ CFLAGS = -pipe -fno-exceptions -fstack-protector -Wl,-z,relro -Wl,-z,now\
         -pedantic -pedantic-errors ${EXEC} -fPIC\
         -fvisibility=hidden -O3
 
-LFLAGS = -lglfw -lGL -lGLEW -lcurl -ljsoncpp
+LFLAGS = -lglfw -lGL -lGLEW -lcurl -ljsoncpp -lassimp
 
 #This is the target that compiles our executable
 all : $(OBJS)
