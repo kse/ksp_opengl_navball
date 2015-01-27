@@ -3,14 +3,18 @@
 #include <iostream>
 #include <stdio.h>
 
-void Sphere::Draw(glm::mat4 view, float deltas) {
+#include <glm/gtx/transform.hpp>
+
+void Sphere::Draw(glm::mat4 view, float heading, float pitch, float roll, float deltas) {
 	glm::mat4 model;
 
 	glUseProgram(shaderProgram);
 
 	glBindVertexArray(VAO);
 
-	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+	model = glm::rotate(model, roll,    glm::vec3(0.0f, 0.0f, 1.0f));
+	model = glm::rotate(model, pitch,   glm::vec3(1.0f, 0.0f, 0.0f));
+	model = glm::rotate(model, heading, glm::vec3(0.0f, -1.0f, 0.0f));
 
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 

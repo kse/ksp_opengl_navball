@@ -160,6 +160,7 @@ int main(int argc, char *argv[]) {
 	GLFWwindow *window;
 	glm::mat4 view; // Identity matrix, is where our camera is based.
 	glm::mat4 projection;
+	glm::mat4 rotation(1.0f);
 	int width, height;
 
 	window = initializeOpenGL();
@@ -180,7 +181,7 @@ int main(int argc, char *argv[]) {
 
 	Telemachus *tm = new Telemachus();
 	int pcount = 0;
-	double heading, pitch, roll;
+	double heading = 0, pitch = 0, roll = 0;
 	
 	glEnable(GL_DEPTH_TEST);
 
@@ -188,11 +189,11 @@ int main(int argc, char *argv[]) {
 		auto start = std::chrono::system_clock::now();
 
 		pcount++;
-		if (pcount == 5) {
+		if (pcount == 3) {
 			bool res = tm->getPitchHeadingRoll(&pitch, &heading, &roll);
 			if (res) {
 				pcount = 0;
-				printf("Pitch: %f, Heading: %f, Roll: %f\n", pitch, heading, roll);
+				//printf("Pitch: %f, Heading: %f, Roll: %f\n", pitch, heading, roll);
 			}
 		}
 
@@ -222,7 +223,10 @@ int main(int argc, char *argv[]) {
 		glClearColor(0.1,0.1,0.1,0.5);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		mass->Draw(view, 1.0f/targetFPS);
+		mass->Draw(view, 3.141593f*((float)heading)/180.0f,
+				3.141593f*((float)pitch)/180.0f,
+				3.141593f*((float)roll)/180.0f,
+				1.0f/targetFPS);
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);

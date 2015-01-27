@@ -35,7 +35,7 @@ class Sphere {
 		Sphere(glm::mat4 projection);
 		~Sphere();
 
-		void Draw(glm::mat4 camera, float deltas);
+		void Draw(glm::mat4 camera, float heading, float pitch, float roll, float deltas);
 };
 
 #endif
