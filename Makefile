@@ -1,8 +1,9 @@
-OBJS = main.cpp Camera.cpp Shader.cpp Telemachus.cpp Sphere.cpp ModelLoader.cpp
-OBJ_NAME = navball
+SRC = main.cpp Camera.cpp Shader.cpp Telemachus.cpp Sphere.cpp ModelLoader.cpp
+OBJ = $(SRC:.cpp=.o)
+EXE = navball
 CC = clang++
 
-CFLAGS = -pipe -fno-exceptions -fstack-protector -Wl,-z,relro -Wl,-z,now\
+CFLAGS = -pipe -fno-exceptions -fstack-protector\
         -W -Wall -Wno-unused-parameter -std=c++11\
         -Wno-unused-function -Wno-unused-label -Wpointer-arith -Wformat\
         -Wreturn-type -Wsign-compare -Wmultichar -Wformat-nonliteral\
@@ -10,8 +11,17 @@ CFLAGS = -pipe -fno-exceptions -fstack-protector -Wl,-z,relro -Wl,-z,now\
         -pedantic -pedantic-errors ${EXEC} -fPIC\
         -fvisibility=hidden -O3
 
-LFLAGS = -lglfw -lGL -lGLEW -lcurl -ljsoncpp -lassimp
+LFLAGS = -Wl,-z,relro -Wl,-z,now
+LIBS = -lglfw -lGL -lGLEW -lcurl -ljsoncpp -lassimp 
+
+all: $(OBJ) $(EXE)
 
 #This is the target that compiles our executable
-all : $(OBJS)
-	$(CC) $(OBJS) $(CFLAGS) $(LFLAGS) -o $(OBJ_NAME)
+$(EXE): $(OBJ)
+	$(CC) $^ $(CFLAGS) $(LFLAGS) $(LIBS) -o $(EXE)
+
+%.o: %.cpp
+	$(CC) -c $(CFLAGS) $< -o $@
+
+clean:
+	rm *.o
