@@ -32,7 +32,7 @@ class Sphere {
 		ModelLoader *modelloader;
 
 	public:
-		Sphere();
+		Sphere(glm::mat4 projection);
 		~Sphere();
 
 		void Draw(glm::mat4 camera, float deltas);

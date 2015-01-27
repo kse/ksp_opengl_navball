@@ -11,7 +11,6 @@ void Sphere::Draw(glm::mat4 view, float deltas) {
 	glBindVertexArray(VAO);
 
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-	projection = glm::perspective(45.0f, 1920.0f / 1080.0f, 0.1f, 1000.0f);
 
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 
@@ -42,8 +41,9 @@ void Sphere::Draw(glm::mat4 view, float deltas) {
 	glBindVertexArray(0);
 }
 
-Sphere::Sphere() {
+Sphere::Sphere(glm::mat4 projection) {
 	modelloader = new ModelLoader("sphere.dae");
+	this->projection = projection;
 
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);

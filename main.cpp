@@ -74,6 +74,7 @@ GLFWwindow *initializeOpenGL() {
 	GLFWwindow *window;
 	glfwSetErrorCallback(glfw_error_callback);
 
+
 	if (!glfwInit()) {
 		fprintf(stderr, "ERROR::GLFW::INITIALIZATION\n");
 		return NULL;
@@ -91,7 +92,7 @@ GLFWwindow *initializeOpenGL() {
 	glfwWindowHint(GLFW_DECORATED, GL_FALSE);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_SAMPLES, 2);
+	//glfwWindowHint(GLFW_SAMPLES, 2);
 
 	window = glfwCreateWindow(10, 10, "Spring Simulator", NULL, NULL);
 	if (window == NULL) {
@@ -158,13 +159,18 @@ void cursorEnterCallback(GLFWwindow *window, int entered) {
 int main(int argc, char *argv[]) {
 	GLFWwindow *window;
 	glm::mat4 view; // Identity matrix, is where our camera is based.
+	glm::mat4 projection;
+	int width, height;
 
 	window = initializeOpenGL();
 	if (window == NULL) {
 		exit(EXIT_FAILURE);
 	}
 
-	Sphere *mass = new Sphere();
+	glfwGetWindowSize(window, &width, &height);
+	projection = glm::perspective(45.0f, (float)width / (float)height, 0.1f, 1000.0f);
+
+	Sphere *mass = new Sphere(projection);
 	Camera *camera = new Camera();
 
 	glfwSetKeyCallback(window, keyPressCallback);
