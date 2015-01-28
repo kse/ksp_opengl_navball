@@ -1,4 +1,4 @@
-SRC = main.cpp Camera.cpp Shader.cpp Telemachus.cpp Sphere.cpp ModelLoader.cpp
+SRC = main.cpp Camera.cpp Shader.cpp Telemachus.cpp Sphere.cpp ModelLoader.cpp lodepng.cpp
 OBJ = $(SRC:.cpp=.o)
 EXE = navball
 CC = clang++

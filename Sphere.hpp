@@ -16,6 +16,9 @@
 
 class Sphere {
 	private:
+		std::vector<unsigned char> textureData;
+		unsigned textureWidth, textureHeight;
+
 		glm::mat4 projection;
 
 		GLint viewLoc,
@@ -25,6 +28,7 @@ class Sphere {
 		GLuint VAO,
 			   VBO,
 			   EBO,
+			   texture,
 			   shaderProgram;
 
 		Shader *shader;

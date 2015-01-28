@@ -3,7 +3,20 @@
 #include <iostream>
 #include <stdio.h>
 
-#include <glm/gtx/transform.hpp>
+#include "lodepng.h"
+
+bool loadpng(const std::string file, std::vector<unsigned char>& textureData,
+		unsigned& textureWidth, unsigned& textureHeight) {
+
+	unsigned error = lodepng::decode(textureData, textureWidth, textureHeight, file);
+
+	if (error) {
+		fprintf(stderr, "Lodepng decoder error: %s\n", lodepng_error_text(error));
+		return false;
+	}
+
+	return true;
+}
 
 void Sphere::Draw(glm::mat4 view, float heading, float pitch, float roll, float deltas) {
 	glm::mat4 model;
@@ -11,13 +24,13 @@ void Sphere::Draw(glm::mat4 view, float heading, float pitch, float roll, float 
 	glUseProgram(shaderProgram);
 
 	glBindVertexArray(VAO);
+	glBindTexture(GL_TEXTURE_2D, texture);
 
 	model = glm::rotate(model, roll,    glm::vec3(0.0f, 0.0f, 1.0f));
 	model = glm::rotate(model, pitch,   glm::vec3(1.0f, 0.0f, 0.0f));
 	model = glm::rotate(model, heading, glm::vec3(0.0f, -1.0f, 0.0f));
 
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
@@ -43,6 +56,7 @@ void Sphere::Draw(glm::mat4 view, float heading, float pitch, float roll, float 
 
 
 	glBindVertexArray(0);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 Sphere::Sphere(glm::mat4 projection) {
@@ -58,6 +72,21 @@ Sphere::Sphere(glm::mat4 projection) {
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*modelloader->vertices.size(), modelloader->vertices.data(), GL_STATIC_DRAW);
+
+	loadpng("navball_brownblue.png", textureData, textureWidth, textureHeight);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+
+
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureWidth, textureHeight,
+			0, GL_RGBA, GL_UNSIGNED_BYTE, textureData.data());
+	glGenerateMipmap(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	GLenum e = glGetError();
 	switch (e) {

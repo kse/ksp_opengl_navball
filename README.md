@@ -12,3 +12,9 @@ this project exists at all. Yeah, I took the long way around.
 Installation and usage will follow if this ever gets to a useful state, right
 now this is only on Github (instead of my private Git) because I want to be
 able to use the Github issue system.
+
+Attributions
+------------
+
+- LodePNG (http://lodev.org/lodepng/) is used to load the texture PNG.
+- The navball texture itself was created by '5thHorseman' on the KSP forums (http://forum.kerbalspaceprogram.com/threads/69540-Making-high-contrast-nav-ball!/page9).
