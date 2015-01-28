@@ -73,7 +73,7 @@ Sphere::Sphere(glm::mat4 projection) {
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*modelloader->vertices.size(), modelloader->vertices.data(), GL_STATIC_DRAW);
 
-	loadpng("navball_brownblue.png", textureData, textureWidth, textureHeight);
+	loadpng("navball_brownblue2.png", textureData, textureWidth, textureHeight);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
