@@ -191,7 +191,7 @@ int main(int argc, char *argv[]) {
 		auto start = std::chrono::system_clock::now();
 
 		pcount++;
-		if (pcount == 3) {
+		if (pcount == 5) {
 			bool res = tm->getPitchHeadingRoll(&pitch, &heading, &roll);
 			if (res) {
 				pcount = 0;
