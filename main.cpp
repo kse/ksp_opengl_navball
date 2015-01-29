@@ -20,6 +20,7 @@
 
 
 #include "Sphere.hpp"
+#include "Indicator.hpp"
 #include "Camera.hpp"
 #include "Telemachus.hpp"
 
@@ -171,7 +172,8 @@ int main(int argc, char *argv[]) {
 	glfwGetWindowSize(window, &width, &height);
 	projection = glm::perspective(45.0f, (float)width / (float)height, 0.1f, 1000.0f);
 
-	Sphere *mass = new Sphere(projection);
+	Sphere *sphere = new Sphere(projection);
+	Indicator *indicator = new Indicator(projection);
 	Camera *camera = new Camera();
 
 	glfwSetKeyCallback(window, keyPressCallback);
@@ -223,10 +225,11 @@ int main(int argc, char *argv[]) {
 		glClearColor(0.1,0.1,0.1,0.5);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		mass->Draw(view, 3.141593f*((float)heading)/180.0f,
+		sphere->Draw(view, 3.141593f*((float)heading)/180.0f,
 				3.141593f*((float)pitch)/180.0f,
 				3.141593f*((float)roll)/180.0f,
 				1.0f/targetFPS);
+		indicator->Draw(view);
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
@@ -246,7 +249,8 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
-	delete mass;
+	delete sphere;
+	delete indicator;
 	
 	glfwTerminate();
 	return EXIT_SUCCESS;

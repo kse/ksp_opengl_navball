@@ -38,7 +38,6 @@ void Sphere::Draw(glm::mat4 view, float heading, float pitch, float roll, float 
 	glDrawElements(GL_TRIANGLES, modelloader->indices.size(), GL_UNSIGNED_INT, 0);
 	//glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 	
-
 	GLenum e = glGetError();
 	switch (e) {
 		case GL_INVALID_ENUM:
@@ -66,7 +65,7 @@ Sphere::Sphere(glm::mat4 projection) {
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 
-	printf("Vertices: %lu, Indices: %lu\n", modelloader->vertices.size(), modelloader->indices.size());
+	//printf("Vertices: %lu, Indices: %lu\n", modelloader->vertices.size(), modelloader->indices.size());
 
 	// Create vertex buffer object (VBO) //
 	glGenBuffers(1, &VBO);
@@ -137,7 +136,6 @@ Sphere::Sphere(glm::mat4 projection) {
 
 	// Get location/offset of attribute 'position'.
 	GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
-
 	glEnableVertexAttribArray(posAttrib);
 	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
