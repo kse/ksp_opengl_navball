@@ -41,7 +41,7 @@ void Sphere::Draw(glm::mat4 view, float heading, float pitch, float roll, float 
 	GLenum e = glGetError();
 	switch (e) {
 		case GL_INVALID_ENUM:
-			fprintf(stderr, "Invalid enum\n");
+			fprintf(stderr, "Invalid in sphere rendering\n");
 			break;
 		case GL_INVALID_VALUE:
 			fprintf(stderr, "Invalid value\n");
@@ -72,13 +72,12 @@ Sphere::Sphere(glm::mat4 projection) {
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*modelloader->vertices.size(), modelloader->vertices.data(), GL_STATIC_DRAW);
 
-	loadpng("navball_brownblue2.png", textureData, textureWidth, textureHeight);
+	loadpng("navball_brownblue3.png", textureData, textureWidth, textureHeight);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
-
 
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
@@ -90,7 +89,7 @@ Sphere::Sphere(glm::mat4 projection) {
 	GLenum e = glGetError();
 	switch (e) {
 		case GL_INVALID_ENUM:
-			fprintf(stderr, "Invalid enum\n");
+			fprintf(stderr, "Invalid enum after texture\n");
 			break;
 		case GL_INVALID_VALUE:
 			fprintf(stderr, "Invalid value\n");

@@ -22,7 +22,7 @@ ModelLoader::ModelLoader(const std::string &file) {
 	aiMesh *mesh = scene->mMeshes[0];
 	unsigned int nVertices = mesh->mNumVertices;
 	unsigned int i;
-	printf("nVertices: %u\n", nVertices);
+	//printf("nVertices: %u\n", nVertices);
 
 	for (i = 0; i < nVertices; i++) {
 		aiVector3D vec = mesh->mVertices[i];
@@ -32,7 +32,7 @@ ModelLoader::ModelLoader(const std::string &file) {
 	}
 
 	unsigned int nFaces = mesh->mNumFaces;
-	printf("nFaces: %u\n", nFaces);
+	//printf("nFaces: %u\n", nFaces);
 
 	for (i = 0; i < nFaces; i++) {
 		aiFace face = mesh->mFaces[i];

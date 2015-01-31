@@ -13,7 +13,7 @@ CFLAGS = -pipe -fno-exceptions -fstack-protector\
         -fvisibility=hidden -O3
 
 LFLAGS = -Wl,-z,relro -Wl,-z,now
-LIBS = -lglfw -lGL -lGLEW -lcurl -ljsoncpp -lassimp 
+LIBS = -lglfw -lGL -lGLEW -ljsoncpp -lassimp -lwebsockets
 
 all: $(OBJ) $(EXE)
 

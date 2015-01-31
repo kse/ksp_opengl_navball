@@ -93,9 +93,10 @@ GLFWwindow *initializeOpenGL() {
 	glfwWindowHint(GLFW_DECORATED, GL_FALSE);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 	//glfwWindowHint(GLFW_SAMPLES, 2);
 
-	window = glfwCreateWindow(10, 10, "Spring Simulator", NULL, NULL);
+	window = glfwCreateWindow(10, 10, "KSP Navball", NULL, NULL);
 	if (window == NULL) {
 		glfwTerminate();
 		return NULL;
@@ -125,7 +126,7 @@ GLFWwindow *initializeOpenGL() {
 
 	glfwMakeContextCurrent(window);
 
-	glfwSwapInterval(1);
+	glfwSwapInterval(0);
 
 	glewExperimental = GL_TRUE;
 	GLenum err = glewInit();
@@ -134,7 +135,13 @@ GLFWwindow *initializeOpenGL() {
 		return NULL;
 	}
 
+	// Initializing GLEW creates an invalid enum error, ignore this error.
+	// https://www.opengl.org/wiki/OpenGL_Loading_Library
+	glGetError();
+
 	glEnable(GL_MULTISAMPLE);
+	glEnable(GL_CULL_FACE);  
+	glEnable(GL_DEPTH_TEST);
 
 	return window;
 }
@@ -177,21 +184,19 @@ int main(int argc, char *argv[]) {
 	Camera *camera = new Camera();
 
 	glfwSetKeyCallback(window, keyPressCallback);
-	glfwSetCursorPosCallback(window, cursorMovementCallback);
-	glfwSetCursorEnterCallback(window, cursorEnterCallback);
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
+	//glfwSetCursorPosCallback(window, cursorMovementCallback);
+	//glfwSetCursorEnterCallback(window, cursorEnterCallback);
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
 
 	Telemachus *tm = new Telemachus();
 	int pcount = 0;
 	double heading = 0, pitch = 0, roll = 0;
-	
-	glEnable(GL_DEPTH_TEST);
 
 	while (!glfwWindowShouldClose(window)) {
 		auto start = std::chrono::system_clock::now();
 
 		pcount++;
-		if (pcount == 5) {
+		if (pcount == 3) {
 			bool res = tm->getPitchHeadingRoll(&pitch, &heading, &roll);
 			if (res) {
 				pcount = 0;
@@ -209,15 +214,15 @@ int main(int argc, char *argv[]) {
 			previousMouseY = mouseY;
 		}
 
-		double deltaX = mouseX - previousMouseX;
-		double deltaY = mouseY - previousMouseY;
-		if (deltaX != 0.0 || deltaY != 0.0) {
-			camera->lookAround(deltaX, deltaY);
-			previousMouseX = mouseX;
-			previousMouseY = mouseY;
-		}
+		//double deltaX = mouseX - previousMouseX;
+		//double deltaY = mouseY - previousMouseY;
+		//if (deltaX != 0.0 || deltaY != 0.0) {
+		//	camera->lookAround(deltaX, deltaY);
+		//	previousMouseX = mouseX;
+		//	previousMouseY = mouseY;
+		//}
 
-		camera->move(keys);
+		//camera->move(keys);
 		view = camera->transformMatrix();
 
 
