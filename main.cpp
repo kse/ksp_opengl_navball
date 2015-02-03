@@ -184,9 +184,9 @@ int main(int argc, char *argv[]) {
 	Camera *camera = new Camera();
 
 	glfwSetKeyCallback(window, keyPressCallback);
-	//glfwSetCursorPosCallback(window, cursorMovementCallback);
-	//glfwSetCursorEnterCallback(window, cursorEnterCallback);
-	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
+	glfwSetCursorPosCallback(window, cursorMovementCallback);
+	glfwSetCursorEnterCallback(window, cursorEnterCallback);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
 
 	Telemachus *tm = new Telemachus();
 	int pcount = 0;
@@ -214,20 +214,20 @@ int main(int argc, char *argv[]) {
 			previousMouseY = mouseY;
 		}
 
-		//double deltaX = mouseX - previousMouseX;
-		//double deltaY = mouseY - previousMouseY;
-		//if (deltaX != 0.0 || deltaY != 0.0) {
-		//	camera->lookAround(deltaX, deltaY);
-		//	previousMouseX = mouseX;
-		//	previousMouseY = mouseY;
-		//}
+		double deltaX = mouseX - previousMouseX;
+		double deltaY = mouseY - previousMouseY;
+		if (deltaX != 0.0 || deltaY != 0.0) {
+			camera->lookAround(deltaX, deltaY);
+			previousMouseX = mouseX;
+			previousMouseY = mouseY;
+		}
 
-		//camera->move(keys);
+		camera->move(keys);
 		view = camera->transformMatrix();
 
 
 		// Set a nice gray BG color.
-		glClearColor(0.1,0.1,0.1,0.5);
+		glClearColor(0.05, 0.05, 0.05, 0.5);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		sphere->Draw(view, 3.141593f*((float)heading)/180.0f,

@@ -68,23 +68,9 @@ Sphere::Sphere(glm::mat4 projection) {
 	//printf("Vertices: %lu, Indices: %lu\n", modelloader->vertices.size(), modelloader->indices.size());
 
 	// Create vertex buffer object (VBO) //
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glGenBuffers(2, VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*modelloader->vertices.size(), modelloader->vertices.data(), GL_STATIC_DRAW);
-
-	loadpng("navball_brownblue3.png", textureData, textureWidth, textureHeight);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
-
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureWidth, textureHeight,
-			0, GL_RGBA, GL_UNSIGNED_BYTE, textureData.data());
-	glGenerateMipmap(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, 0);
 
 	GLenum e = glGetError();
 	switch (e) {
@@ -100,6 +86,10 @@ Sphere::Sphere(glm::mat4 projection) {
 		default:
 			break;
 	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO[1]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*modelloader->normals.size(),
+			modelloader->normals.data(), GL_STATIC_DRAW);
 
 	// Create EBO (element buffer object) //
 	glGenBuffers(1, &EBO);
@@ -121,6 +111,22 @@ Sphere::Sphere(glm::mat4 projection) {
 			break;
 	}
 
+
+	loadpng("navball_brownblue3.png", textureData, textureWidth, textureHeight);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureWidth, textureHeight,
+			0, GL_RGBA, GL_UNSIGNED_BYTE, textureData.data());
+	glGenerateMipmap(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+
 	shader = new Shader();
 
 	// Compile Vertex Shader //
@@ -134,9 +140,15 @@ Sphere::Sphere(glm::mat4 projection) {
 	glBindFragDataLocation(shaderProgram, 0, "outColor");
 
 	// Get location/offset of attribute 'position'.
+	glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
 	GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
 	glEnableVertexAttribArray(posAttrib);
 	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO[1]);
+	GLint normalAttrib = glGetAttribLocation(shaderProgram, "normal");
+	glEnableVertexAttribArray(normalAttrib);
+	glVertexAttribPointer(normalAttrib, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 	viewLoc = glGetUniformLocation(shaderProgram, "view");
 	projLoc = glGetUniformLocation(shaderProgram, "projection");
@@ -147,7 +159,7 @@ Sphere::Sphere(glm::mat4 projection) {
 
 Sphere::~Sphere() {
 	delete shader;
-	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, VBO);
 	glDeleteBuffers(1, &EBO);
 	glDeleteVertexArrays(1, &VAO);
 }

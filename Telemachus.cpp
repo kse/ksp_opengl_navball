@@ -5,12 +5,17 @@
 #include <unistd.h>
 #include <string.h>
 
+#include <math.h>
+
 #include "Telemachus.hpp"
 
 typedef struct {
 	float pitch;
 	float heading;
 	float roll;
+	float surfaceVelocityx;
+	float surfaceVelocityy;
+	float surfaceVelocityz;
 } measurement;
 
 int
@@ -53,24 +58,29 @@ int wsCallback(struct libwebsocket_context * context,
 	switch(reason) {
 		case LWS_CALLBACK_CLIENT_ESTABLISHED:
 			// TODO: Check results from call more reliably.
-			res = wsSendMessage(wsi, "{\"+\":[\"n.rawheading\",\"n.rawpitch\",\"n.rawroll\"]}");
+			res = wsSendMessage(wsi, "{\"+\":[\"n.rawheading\",\"n.rawpitch\",\"n.rawroll\",\"o.trueAnomaly\",\"o.inclination\"]}");
 			assert(res != -1);
-			res = wsSendMessage(wsi, "{\"rate\":30}");
+			res = wsSendMessage(wsi, "{\"rate\":100}");
 			assert(res != -1);
 
 			m = (measurement*)libwebsocket_context_user(context);
 			m->pitch = 0.0f;
 			m->heading = 0.0f;
 			m->roll = 0.0f;
+			m->surfaceVelocityx = 0.0f;
+			m->surfaceVelocityy = 0.0f;
+			m->surfaceVelocityz = 0.0f;
 
 			break;
 		case LWS_CALLBACK_CLIENT_RECEIVE:
 		case LWS_CALLBACK_RECEIVE:
-			//unsigned i;
-			//for (i = 0; i < len; i++) {
-			//	putchar(((char*)in)[i]);
-			//}
-			//putchar('\n');
+			//*
+			unsigned i;
+			for (i = 0; i < len; i++) {
+				putchar(((char*)in)[i]);
+			}
+			putchar('\n');
+			// */
 
 			m = (measurement*)libwebsocket_context_user(context);
 			success = reader.parse((const char*)in, root);
@@ -81,6 +91,14 @@ int wsCallback(struct libwebsocket_context * context,
 				m->pitch = root.get("n.rawpitch", Json::Value(0.0)).asDouble();
 				m->heading = root.get("n.rawheading", Json::Value(0.0)).asDouble();
 				m->roll = root.get("n.rawroll", Json::Value(0.0)).asDouble();
+				m->surfaceVelocityx = root.get("n.surfaceVelocityx", Json::Value(0.0)).asDouble();
+				m->surfaceVelocityy = root.get("n.surfaceVelocityy", Json::Value(0.0)).asDouble();
+				m->surfaceVelocityz = root.get("n.surfaceVelocityz", Json::Value(0.0)).asDouble();
+
+				double trueAnomaly = root.get("o.trueAnomaly", Json::Value(0.0)).asDouble();
+
+				trueAnomaly *= 3.14159265359/180;
+				printf("Cos(an) = %f, Sin(an) = %f\n", cos(trueAnomaly), sin(trueAnomaly));
 			}
 
 			break;

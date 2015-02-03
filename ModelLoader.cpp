@@ -29,6 +29,11 @@ ModelLoader::ModelLoader(const std::string &file) {
 		vertices.push_back(vec.x);
 		vertices.push_back(vec.y);
 		vertices.push_back(vec.z);
+
+		vec = mesh->mNormals[i];
+		normals.push_back(vec.x);
+		normals.push_back(vec.y);
+		normals.push_back(vec.z);
 	}
 
 	unsigned int nFaces = mesh->mNumFaces;

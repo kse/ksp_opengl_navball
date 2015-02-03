@@ -26,7 +26,7 @@ class Sphere {
 			  modelLoc;
 
 		GLuint VAO,
-			   VBO,
+			   VBO[2],
 			   EBO,
 			   texture,
 			   shaderProgram;
